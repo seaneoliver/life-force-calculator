@@ -1,0 +1,61 @@
+# Life Force Calculator - Progress Log
+
+Project: Life Force Calculator
+Branch: ralph/life-force-calculator
+Started: 2026-01-18
+
+---
+
+## Completed Stories
+
+### US-001: Create base HTML structure with step indicator
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-002: Add income input method toggle
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-003: Add annual salary input fields
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-004: Add hourly rate input field
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-005: Add time commitment input fields
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-006: Add item details input fields
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-007: Add step navigation buttons
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-008: Calculate and display life hours result
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-009: Add Calculate Another button
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-010: Add Start Over button
+Status: PASS
+Notes: Pre-existing implementation
+
+### US-011: Add dark mode / light mode toggle
+Status: PASS
+Completed: 2026-01-18
+Notes: Implemented theme toggle with sun/moon icons, CSS variables for dark theme, respects prefers-color-scheme, sessionStorage persistence
+
+---
+
+## Summary
+
+All 11 user stories complete.
+PRD fully implemented.

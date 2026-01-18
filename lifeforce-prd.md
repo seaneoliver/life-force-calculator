@@ -158,9 +158,9 @@ Description: As a user, I want to be able to toggle between a light mode and dar
 
 Acceptance Criteria:
 
-- [ ] Toggle exists on page for user to choose between dark mode and light mode ➕ 2026-01-18
-- [ ] Page respects system settings for dark mode and light mode
-- [ ] Verify in browser
+- [x] Toggle exists on page for user to choose between dark mode and light mode ✅ 2026-01-18
+- [x] Page respects system settings for dark mode and light mode ✅ 2026-01-18
+- [x] Verify in browser ✅ 2026-01-18
 
 ## Functional Requirements
 
