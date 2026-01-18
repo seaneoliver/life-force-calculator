@@ -12,6 +12,20 @@
             --washed-black: #1F262A;
             --caught-red: #BE4236;
             --teal-blue: #347899;
+
+            --bg-primary: var(--luster-white);
+            --bg-card: var(--shoji-white);
+            --bg-input: var(--luster-white);
+            --text-primary: var(--washed-black);
+            --border-color: var(--hazy-blue);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1d21;
+            --bg-card: #252a30;
+            --bg-input: #1a1d21;
+            --text-primary: #E6DFD3;
+            --border-color: #3d4550;
         }
 
         * {
@@ -22,14 +36,15 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background-color: var(--luster-white);
-            color: var(--washed-black);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 2rem 1rem;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -62,10 +77,60 @@
         }
 
         .card {
-            background-color: var(--shoji-white);
+            background-color: var(--bg-card);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--teal-blue);
+        }
+
+        .theme-toggle .icon-sun,
+        .theme-toggle .icon-moon {
+            position: absolute;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .theme-toggle .icon-sun {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        .theme-toggle .icon-moon {
+            opacity: 0;
+            transform: rotate(-90deg);
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            opacity: 0;
+            transform: rotate(90deg);
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-moon {
+            opacity: 1;
+            transform: rotate(0deg);
         }
 
         .step-indicator {
@@ -98,10 +163,11 @@
 
         .toggle-container {
             display: flex;
-            background-color: var(--luster-white);
+            background-color: var(--bg-input);
             border-radius: 8px;
             padding: 4px;
             margin-bottom: 1.5rem;
+            transition: background-color 0.3s;
         }
 
         .toggle-btn {
@@ -113,12 +179,12 @@
             border-radius: 6px;
             font-size: 0.9rem;
             font-weight: 500;
-            color: var(--washed-black);
+            color: var(--text-primary);
             transition: all 0.2s;
         }
 
         .toggle-btn.active {
-            background-color: var(--shoji-white);
+            background-color: var(--bg-card);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
@@ -143,12 +209,12 @@
         input[type="number"] {
             width: 100%;
             padding: 0.875rem 1rem;
-            border: 2px solid var(--hazy-blue);
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
-            background-color: var(--luster-white);
-            color: var(--washed-black);
-            transition: border-color 0.2s;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            transition: border-color 0.2s, background-color 0.3s;
         }
 
         input:focus {
@@ -239,10 +305,11 @@
         }
 
         .breakdown {
-            background-color: var(--luster-white);
+            background-color: var(--bg-input);
             border-radius: 8px;
             padding: 1.25rem;
             text-align: left;
+            transition: background-color 0.3s;
         }
 
         .breakdown h3 {
@@ -257,7 +324,7 @@
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
-            border-bottom: 1px solid var(--hazy-blue);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .breakdown-item:last-child {
@@ -272,7 +339,7 @@
             text-align: center;
             margin-top: 1.5rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--hazy-blue);
+            border-top: 1px solid var(--border-color);
         }
 
         .true-rate-label {
@@ -305,6 +372,11 @@
     </style>
 </head>
 <body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+        <span class="icon-sun">&#9728;</span>
+        <span class="icon-moon">&#9790;</span>
+    </button>
+
     <div class="container">
         <header>
             <h1>Life Force Calculator</h1>
@@ -429,6 +501,26 @@
     </div>
 
     <script>
+        // Theme handling
+        function initTheme() {
+            const savedTheme = sessionStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            sessionStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize theme on page load
+        initTheme();
+
         let inputType = 'salary';
 
         function toggleInputType(type) {
