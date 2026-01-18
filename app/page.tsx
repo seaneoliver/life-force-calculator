@@ -37,6 +37,18 @@ export default function LifeForceCalculator() {
     setCurrentStep(stepNum);
   };
 
+  const validateAndContinue = () => {
+    if (inputType === "salary" && !salary.trim()) {
+      alert("Please enter your annual salary.");
+      return;
+    }
+    if (inputType === "hourly" && !hourlyRate.trim()) {
+      alert("Please enter your hourly rate.");
+      return;
+    }
+    goToStep(2);
+  };
+
   const calculateTrueHourlyRate = () => {
     const work = parseFloat(workHours) || 40;
     const commute = parseFloat(commuteHours) || 0;
@@ -149,7 +161,7 @@ export default function LifeForceCalculator() {
               <input
                 type="number"
                 id="salary"
-                placeholder="80000"
+                placeholder="Enter your gross annual salary"
                 value={salary}
                 onChange={(e) => setSalary(e.target.value)}
               />
@@ -237,7 +249,7 @@ export default function LifeForceCalculator() {
             />
           </div>
 
-          <button className="btn btn-primary" onClick={() => goToStep(2)}>
+          <button className="btn btn-primary" onClick={validateAndContinue}>
             Continue
           </button>
         </div>
