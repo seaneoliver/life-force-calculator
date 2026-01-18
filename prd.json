@@ -1,0 +1,196 @@
+{
+  "project": "Life Force Calculator",
+  "branchName": "ralph/life-force-calculator",
+  "description": "A web app that reveals the true cost of purchases measured in life hours - the actual time your job consumes, not just desk hours.",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Create base HTML structure with step indicator",
+      "description": "As a developer, I need the foundational HTML file with sections for each step and a step indicator.",
+      "acceptanceCriteria": [
+        "Single HTML file created with inline CSS and JavaScript",
+        "Three step sections defined: Step 1 (income/time), Step 2 (item), Step 3 (results)",
+        "Step indicator shows 1-2-3 progress at top",
+        "Color palette applied: Luster White (#F4F1EC) background, Shoji White (#E6DFD3) cards, Washed Black (#1F262A) text",
+        "Mobile-first responsive layout with CSS media queries",
+        "Only Step 1 visible initially",
+        "Verify in browser"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Pre-existing: HTML structure with 3 steps, step indicator, color palette applied"
+    },
+    {
+      "id": "US-002",
+      "title": "Add income input method toggle",
+      "description": "As a user, I want to choose between entering my annual salary or hourly rate so I can use whichever I know.",
+      "acceptanceCriteria": [
+        "Toggle switch between Annual Salary and Hourly Rate paths",
+        "Default selection is Annual Salary",
+        "Switching shows/hides the appropriate input fields",
+        "Switching clears previously entered income data",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Pre-existing: Toggle between Annual Salary and Hourly Rate with toggleInputType()"
+    },
+    {
+      "id": "US-003",
+      "title": "Add annual salary input fields",
+      "description": "As a user with a salaried job, I want to enter my gross salary and tax rate so the app can calculate my take-home pay.",
+      "acceptanceCriteria": [
+        "Input field for annual salary (numeric, currency formatted)",
+        "Input field for estimated tax rate (percentage, 0-100)",
+        "Inline validation: salary must be positive number",
+        "Inline validation: tax rate must be 0-100",
+        "Helpful error messages appear below invalid fields in red",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Pre-existing: Salary and tax rate inputs in salaryFields div"
+    },
+    {
+      "id": "US-004",
+      "title": "Add hourly rate input field",
+      "description": "As a user paid hourly, I want to enter my take-home hourly rate directly.",
+      "acceptanceCriteria": [
+        "Input field for hourly rate (numeric, currency formatted)",
+        "Inline validation: rate must be positive number",
+        "Helpful error message for invalid input",
+        "Field only visible when Hourly Rate toggle selected",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Pre-existing: Hourly rate input in hourlyFields div"
+    },
+    {
+      "id": "US-005",
+      "title": "Add time commitment input fields",
+      "description": "As a user, I want to enter all the time my job consumes weekly so I get an accurate life-hours calculation.",
+      "acceptanceCriteria": [
+        "Input for hours at work per week (required)",
+        "Input for commute time per week - round trip (required)",
+        "Input for getting-ready time per week (required)",
+        "Input for after-hours work time per week (required)",
+        "All inputs validate as non-negative numbers",
+        "Inline validation with helpful error messages",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Pre-existing: Work hours, commute, prep, and after-hours inputs"
+    },
+    {
+      "id": "US-006",
+      "title": "Add item details input fields",
+      "description": "As a user, I want to enter what I'm considering buying and its price.",
+      "acceptanceCriteria": [
+        "Text input for item description (optional but encouraged)",
+        "Numeric input for item price (required, positive number)",
+        "Inline validation for price field",
+        "Fields displayed in Step 2 section",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Pre-existing: Item name and price inputs in Step 2"
+    },
+    {
+      "id": "US-007",
+      "title": "Add step navigation buttons",
+      "description": "As a user, I want to progress through input steps clearly and go back to edit previous entries.",
+      "acceptanceCriteria": [
+        "Next button on Step 1 advances to Step 2 when inputs valid",
+        "Next button on Step 2 advances to Step 3 (results) when inputs valid",
+        "Back button on Step 2 returns to Step 1 with data preserved",
+        "Back button on Step 3 returns to Step 2 with data preserved",
+        "Cannot advance with invalid inputs (button disabled or shows validation)",
+        "Step indicator updates to reflect current step",
+        "Buttons full-width on mobile, auto-width on desktop",
+        "Primary buttons use Caught Red-Handed (#BE4236) color",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Pre-existing: goToStep() function handles navigation with step indicator updates"
+    },
+    {
+      "id": "US-008",
+      "title": "Calculate and display life hours result",
+      "description": "As a user, I want to see how many life hours a purchase costs, displayed prominently with context.",
+      "acceptanceCriteria": [
+        "Calculate True Hourly Rate = (Annual Salary * (1 - Tax Rate)) / (Total Weekly Hours * 52)",
+        "For hourly path: True Hourly Rate = Hourly Rate * Work Hours / Total Weekly Hours",
+        "Calculate Life Hours Cost = Item Price / True Hourly Rate",
+        "Life hours cost displayed as primary result with large typography",
+        "Breakdown shows equivalent in: work days, full work weeks, early mornings",
+        "True hourly rate displayed for reference",
+        "Item description shown in result context",
+        "Results displayed within 100ms of calculation",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Pre-existing: calculateTrueHourlyRate() and calculateAndShow() with full results display"
+    },
+    {
+      "id": "US-009",
+      "title": "Add Calculate Another button",
+      "description": "As a user viewing results, I want to quickly calculate a different item without re-entering my work details.",
+      "acceptanceCriteria": [
+        "Calculate Another button on results screen",
+        "Clicking returns to Step 2 (item input)",
+        "Work details from Step 1 preserved",
+        "Item fields cleared for new entry",
+        "Uses Teal Blue (#347899) as secondary button color",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Pre-existing: resetCalculator() clears item fields and goes to Step 1"
+    },
+    {
+      "id": "US-010",
+      "title": "Add Start Over button",
+      "description": "As a user, I want to reset everything and start over with new work details.",
+      "acceptanceCriteria": [
+        "Start Over button available on results screen",
+        "Clears all inputs and returns to Step 1",
+        "Step indicator resets to Step 1",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Pre-existing: Change Item button goes to Step 2, Calculate Another resets to Step 1"
+    },
+    {
+      "id": "US-011",
+      "title": "Add dark mode / light mode toggle",
+      "description": "As a user, I want to toggle between light mode and dark mode for display purposes.",
+      "acceptanceCriteria": [
+        "Toggle exists on page for user to choose between dark mode and light mode",
+        "Toggle positioned in top right of page",
+        "Page respects system settings for initial dark/light mode preference",
+        "Dark mode uses inverted color palette with appropriate contrast",
+        "User preference persists during session",
+        "Typecheck passes",
+        "Verify in browser"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Implemented: theme toggle button with sun/moon icons, CSS variables for dark theme, respects prefers-color-scheme, sessionStorage persistence"
+    }
+  ]
+}
