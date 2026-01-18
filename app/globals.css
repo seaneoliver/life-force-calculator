@@ -153,6 +153,18 @@ input:focus {
   border-color: var(--teal-blue);
 }
 
+/* Remove number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .input-row {
   display: flex;
   gap: 1rem;
