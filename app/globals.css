@@ -310,7 +310,7 @@ input[type="number"] {
 .life-hours-label {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--washed-black);
+  color: var(--caught-red);
   margin-bottom: 1.5rem;
 }
 
