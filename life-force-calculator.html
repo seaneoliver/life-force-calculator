@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Force Calculator</title>
+    <style>
+        :root {
+            --luster-white: #F4F1EC;
+            --shoji-white: #E6DFD3;
+            --hazy-blue: #BCC8CC;
+            --washed-black: #1F262A;
+            --caught-red: #BE4236;
+            --teal-blue: #347899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--luster-white);
+            color: var(--washed-black);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            color: var(--teal-blue);
+            font-size: 0.95rem;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--shoji-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--hazy-blue);
+            transition: background-color 0.3s;
+        }
+
+        .step-dot.active {
+            background-color: var(--caught-red);
+        }
+
+        .step-dot.completed {
+            background-color: var(--teal-blue);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-container {
+            display: flex;
+            background-color: var(--luster-white);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 1.5rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--washed-black);
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background-color: var(--shoji-white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .label-hint {
+            font-weight: 400;
+            color: var(--teal-blue);
+            font-size: 0.8rem;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--hazy-blue);
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: var(--luster-white);
+            color: var(--washed-black);
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--teal-blue);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .input-row .form-group {
+            flex: 1;
+        }
+
+        .salary-fields,
+        .hourly-fields {
+            display: none;
+        }
+
+        .salary-fields.active,
+        .hourly-fields.active {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--caught-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--teal-blue);
+            border: 2px solid var(--teal-blue);
+            margin-top: 0.75rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--teal-blue);
+            color: white;
+        }
+
+        /* Results Step */
+        .result-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .result-intro {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-name {
+            color: var(--teal-blue);
+            font-weight: 600;
+        }
+
+        .life-hours {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--caught-red);
+            line-height: 1.1;
+            margin-bottom: 0.25rem;
+        }
+
+        .life-hours-label {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--washed-black);
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown {
+            background-color: var(--luster-white);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: left;
+        }
+
+        .breakdown h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--teal-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--hazy-blue);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-value {
+            font-weight: 600;
+        }
+
+        .true-rate {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--hazy-blue);
+        }
+
+        .true-rate-label {
+            font-size: 0.85rem;
+            color: var(--teal-blue);
+        }
+
+        .true-rate-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .quote {
+            margin-top: 1.5rem;
+            font-style: italic;
+            color: var(--teal-blue);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 400px) {
+            .life-hours {
+                font-size: 3rem;
+            }
+
+            .input-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Life Force Calculator</h1>
+            <p class="tagline">What does that purchase really cost?</p>
+        </header>
+
+        <div class="step-indicator">
+            <div class="step-dot active" data-step="1"></div>
+            <div class="step-dot" data-step="2"></div>
+            <div class="step-dot" data-step="3"></div>
+        </div>
+
+        <!-- Step 1: Work Details -->
+        <div class="step active" id="step1">
+            <div class="card">
+                <h2>Your Work Reality</h2>
+
+                <div class="toggle-container">
+                    <button class="toggle-btn active" id="salaryToggle" onclick="toggleInputType('salary')">Annual Salary</button>
+                    <button class="toggle-btn" id="hourlyToggle" onclick="toggleInputType('hourly')">Hourly Rate</button>
+                </div>
+
+                <div class="salary-fields active" id="salaryFields">
+                    <div class="form-group">
+                        <label for="salary">Annual Salary (gross)</label>
+                        <input type="number" id="salary" placeholder="80000">
+                    </div>
+                    <div class="form-group">
+                        <label for="taxRate">Estimated Tax Rate <span class="label-hint">%</span></label>
+                        <input type="number" id="taxRate" placeholder="30" min="0" max="100">
+                    </div>
+                </div>
+
+                <div class="hourly-fields" id="hourlyFields">
+                    <div class="form-group">
+                        <label for="hourlyRate">Hourly Rate (take-home)</label>
+                        <input type="number" id="hourlyRate" placeholder="25">
+                    </div>
+                </div>
+
+                <h2>Time Your Job Consumes</h2>
+
+                <div class="form-group">
+                    <label for="workHours">Hours at work per week</label>
+                    <input type="number" id="workHours" placeholder="40" value="40">
+                </div>
+
+                <div class="input-row">
+                    <div class="form-group">
+                        <label for="commuteHours">Commute <span class="label-hint">hrs/week</span></label>
+                        <input type="number" id="commuteHours" placeholder="5" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="prepHours">Getting Ready <span class="label-hint">hrs/week</span></label>
+                        <input type="number" id="prepHours" placeholder="5" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="afterHours">After-hours work <span class="label-hint">emails, calls, travel per week</span></label>
+                    <input type="number" id="afterHours" placeholder="2" value="0">
+                </div>
+
+                <button class="btn btn-primary" onclick="goToStep(2)">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Item Details -->
+        <div class="step" id="step2">
+            <div class="card">
+                <h2>What are you considering?</h2>
+
+                <div class="form-group">
+                    <label for="itemName">Item or purchase</label>
+                    <input type="text" id="itemName" placeholder="New headphones">
+                </div>
+
+                <div class="form-group">
+                    <label for="itemPrice">Price</label>
+                    <input type="number" id="itemPrice" placeholder="299">
+                </div>
+
+                <button class="btn btn-primary" onclick="calculateAndShow()">Calculate Life Cost</button>
+                <button class="btn btn-secondary" onclick="goToStep(1)">Back</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Results -->
+        <div class="step" id="step3">
+            <div class="card result-card">
+                <p class="result-intro">To purchase <span class="item-name" id="resultItemName"></span></p>
+                <div class="life-hours" id="resultHours"></div>
+                <div class="life-hours-label">hours of your life</div>
+
+                <div class="breakdown">
+                    <h3>That's equivalent to</h3>
+                    <div class="breakdown-item">
+                        <span>Work days</span>
+                        <span class="breakdown-value" id="resultDays"></span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Full work weeks</span>
+                        <span class="breakdown-value" id="resultWeeks"></span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Early mornings waking up</span>
+                        <span class="breakdown-value" id="resultMornings"></span>
+                    </div>
+                </div>
+
+                <div class="true-rate">
+                    <div class="true-rate-label">Your true hourly rate</div>
+                    <div class="true-rate-value" id="resultRate"></div>
+                </div>
+
+                <p class="quote">"Every purchase is a trade. Time for things."</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetCalculator()">Calculate Another</button>
+            <button class="btn btn-secondary" onclick="goToStep(2)">Change Item</button>
+        </div>
+    </div>
+
+    <script>
+        let inputType = 'salary';
+
+        function toggleInputType(type) {
+            inputType = type;
+
+            document.getElementById('salaryToggle').classList.toggle('active', type === 'salary');
+            document.getElementById('hourlyToggle').classList.toggle('active', type === 'hourly');
+            document.getElementById('salaryFields').classList.toggle('active', type === 'salary');
+            document.getElementById('hourlyFields').classList.toggle('active', type === 'hourly');
+        }
+
+        function goToStep(stepNum) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+
+            // Show target step
+            document.getElementById('step' + stepNum).classList.add('active');
+
+            // Update indicators
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                dot.classList.remove('active', 'completed');
+                if (index + 1 < stepNum) {
+                    dot.classList.add('completed');
+                } else if (index + 1 === stepNum) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function calculateTrueHourlyRate() {
+            const workHours = parseFloat(document.getElementById('workHours').value) || 40;
+            const commuteHours = parseFloat(document.getElementById('commuteHours').value) || 0;
+            const prepHours = parseFloat(document.getElementById('prepHours').value) || 0;
+            const afterHours = parseFloat(document.getElementById('afterHours').value) || 0;
+
+            // Total life hours consumed by work per week
+            const totalWeeklyHours = workHours + commuteHours + prepHours + afterHours;
+
+            // Annual life hours consumed by work (52 weeks)
+            const annualLifeHours = totalWeeklyHours * 52;
+
+            let annualTakeHome;
+
+            if (inputType === 'salary') {
+                const salary = parseFloat(document.getElementById('salary').value) || 0;
+                const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+                annualTakeHome = salary * (1 - taxRate / 100);
+            } else {
+                // Hourly rate path: hourly rate * hours at work * 52 weeks
+                const hourlyRate = parseFloat(document.getElementById('hourlyRate').value) || 0;
+                annualTakeHome = hourlyRate * workHours * 52;
+            }
+
+            // True hourly rate = take-home pay / total life hours consumed
+            const trueHourlyRate = annualTakeHome / annualLifeHours;
+
+            return {
+                trueHourlyRate,
+                totalWeeklyHours,
+                workHours
+            };
+        }
+
+        function calculateAndShow() {
+            const itemName = document.getElementById('itemName').value || 'this item';
+            const itemPrice = parseFloat(document.getElementById('itemPrice').value) || 0;
+
+            const { trueHourlyRate, totalWeeklyHours, workHours } = calculateTrueHourlyRate();
+
+            if (trueHourlyRate <= 0 || itemPrice <= 0) {
+                alert('Please fill in all required fields with valid numbers.');
+                return;
+            }
+
+            // Calculate life hours cost
+            const lifeHours = itemPrice / trueHourlyRate;
+
+            // Calculate equivalents
+            const avgDayLength = totalWeeklyHours / 5; // Assuming 5 work days
+            const workDays = lifeHours / avgDayLength;
+            const workWeeks = lifeHours / totalWeeklyHours;
+            const mornings = Math.ceil(lifeHours / avgDayLength); // Each work day is an early morning
+
+            // Display results
+            document.getElementById('resultItemName').textContent = itemName;
+            document.getElementById('resultHours').textContent = lifeHours.toFixed(1);
+            document.getElementById('resultDays').textContent = workDays.toFixed(1);
+            document.getElementById('resultWeeks').textContent = workWeeks.toFixed(2);
+            document.getElementById('resultMornings').textContent = mornings;
+            document.getElementById('resultRate').textContent = '$' + trueHourlyRate.toFixed(2) + '/hr';
+
+            goToStep(3);
+        }
+
+        function resetCalculator() {
+            // Clear item fields
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
