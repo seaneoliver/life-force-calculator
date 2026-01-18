@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Results {
   itemName: string;
@@ -14,6 +14,26 @@ interface Results {
 export default function LifeForceCalculator() {
   const [currentStep, setCurrentStep] = useState(1);
   const [inputType, setInputType] = useState<"salary" | "hourly">("salary");
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  // Initialize theme from system preference or sessionStorage
+  useEffect(() => {
+    const savedTheme = sessionStorage.getItem("theme") as "light" | "dark" | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setTheme("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+    sessionStorage.setItem("theme", newTheme);
+  };
 
   // Form values
   const [salary, setSalary] = useState("");
@@ -114,8 +134,14 @@ export default function LifeForceCalculator() {
   };
 
   return (
-    <div className="container">
-      <header>
+    <>
+      <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle dark mode">
+        <span className="icon-sun">&#9728;</span>
+        <span className="icon-moon">&#9790;</span>
+      </button>
+
+      <div className="container">
+        <header>
         <h1>Life Force Calculator</h1>
         <p className="tagline">What does that purchase really cost?</p>
       </header>
@@ -338,5 +364,6 @@ export default function LifeForceCalculator() {
         </button>
       </div>
     </div>
+    </>
   );
 }
